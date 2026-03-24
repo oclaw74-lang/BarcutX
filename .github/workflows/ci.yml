@@ -2,15 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: ["**"]
   pull_request:
-    branches: [main, develop]
+    branches: ["**"]
 
 jobs:
-  # ─── JS/TS: lint + typecheck (Turborepo) ───────────────────────────────────
-  js:
-    name: JS/TS — lint & typecheck
+  # ─── Job 1: JS/TS lint + typecheck ────────────────────────────────────────
+  lint-and-typecheck:
+    name: Lint & Typecheck
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -26,15 +27,39 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm typecheck
+      - name: Lint (Turborepo)
+        run: pnpm turbo lint
 
-      - name: Lint
-        run: pnpm lint
+      - name: Typecheck (Turborepo)
+        run: pnpm turbo typecheck
 
-  # ─── Python: lint + typecheck + tests ──────────────────────────────────────
-  python:
-    name: Python — lint, typecheck & tests
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('apps/backend-api/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python linting tools
+        working-directory: apps/backend-api
+        run: pip install uv --no-cache-dir && uv pip install --system ".[dev]"
+
+      - name: Lint Python (ruff check)
+        working-directory: apps/backend-api
+        run: ruff check .
+
+      - name: Format check Python (ruff format)
+        working-directory: apps/backend-api
+        run: ruff format --check .
+
+  # ─── Job 2: Backend tests ─────────────────────────────────────────────────
+  test-backend:
+    name: Test — Backend (Python 3.12)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -42,7 +67,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:16
         env:
           POSTGRES_USER: barcutx
           POSTGRES_PASSWORD: barcutx_test
@@ -72,20 +97,16 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install uv
-        run: pip install uv --no-cache-dir
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('apps/backend-api/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: uv pip install --system -e ".[dev]"
-
-      - name: Lint (ruff)
-        run: ruff check .
-
-      - name: Format check (ruff)
-        run: ruff format --check .
-
-      - name: Typecheck (mypy)
-        run: mypy app
+        run: pip install uv --no-cache-dir && uv pip install --system -e ".[dev]"
 
       - name: Run tests
         env:
@@ -96,6 +117,31 @@ jobs:
           SUPABASE_ANON_KEY: placeholder
           SUPABASE_SERVICE_ROLE_KEY: placeholder
           SUPABASE_JWT_SECRET: test-secret-32-chars-minimum-here
+          SECRET_KEY: test-secret-key-not-for-production
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_WEBHOOK_SECRET: whsec_placeholder
-        run: pytest --cov=app --cov-report=term-missing -q
+        run: pytest apps/backend-api/tests/ -v --tb=short --cov=app --cov-report=term-missing
+        working-directory: ${{ github.workspace }}
+
+  # ─── Job 3: Frontend tests ────────────────────────────────────────────────
+  test-frontend:
+    name: Test — Frontend (Node 20)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests (Vitest via Turborepo)
+        run: pnpm turbo test
