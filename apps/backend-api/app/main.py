@@ -41,6 +41,7 @@ app.add_middleware(
 @app.get("/health", tags=["system"])
 async def health_check() -> dict[str, str]:
     from sqlalchemy import text
+
     from app.core.database import AsyncSessionLocal
     from app.core.redis import get_redis
     db_status = "disconnected"
@@ -60,7 +61,14 @@ async def health_check() -> dict[str, str]:
     return {"status": "ok", "db": db_status, "redis": redis_status, "version": "0.1.0"}
 
 
+# Auth -- issue #8
+from app.api.v1.auth import router as auth_router  # noqa: E402
+
+app.include_router(auth_router, prefix="/api/v1")
+
+# Queue -- issue #12
 from app.api.v1.queue import router as queue_router  # noqa: E402
+
 app.include_router(queue_router, prefix="/api/v1")
 
 # Barber Shops & Barbers -- issue #9

@@ -13,10 +13,11 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Inicio', href: '/dashboard' },
-  { label: 'Citas', href: '/dashboard/appointments' },
-  { label: 'Cola', href: '/dashboard/queue' },
+  { label: 'Mi Barberia', href: '/dashboard/shop' },
   { label: 'Servicios', href: '/dashboard/services' },
-  { label: 'Estadisticas', href: '/dashboard/stats' },
+  { label: 'Reservas', href: '/dashboard/appointments' },
+  { label: 'Cola Virtual', href: '/dashboard/queue' },
+  { label: 'Configuracion', href: '/dashboard/settings' },
 ]
 
 function Sidebar() {
