@@ -41,6 +41,7 @@ app.add_middleware(
 @app.get("/health", tags=["system"])
 async def health_check() -> dict[str, str]:
     from sqlalchemy import text
+
     from app.core.database import AsyncSessionLocal
     from app.core.redis import get_redis
 
@@ -64,6 +65,7 @@ async def health_check() -> dict[str, str]:
     return {"status": "ok", "db": db_status, "redis": redis_status, "version": "0.1.0"}
 
 
-# Routers (registered in Fase 1)
-# from app.api.v1 import router as api_v1_router
-# app.include_router(api_v1_router, prefix="/api/v1")
+# Auth -- issue #8
+from app.api.v1.auth import router as auth_router  # noqa: E402
+
+app.include_router(auth_router, prefix="/api/v1")
