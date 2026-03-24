@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Sora } from 'next/font/google'
+import { QueryProvider } from '@/components/providers/QueryProvider'
 import './globals.css'
 
 const inter = Inter({
@@ -24,8 +25,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="dark">
-      <body className={`${inter.variable} ${sora.variable} font-sans bg-background text-white antialiased`}>
-        {children}
+      <body
+        className={`${inter.variable} ${sora.variable} font-sans bg-background text-white antialiased`}
+      >
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   )
