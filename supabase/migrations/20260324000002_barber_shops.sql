@@ -30,12 +30,14 @@ CREATE TABLE IF NOT EXISTS public.barbers (
 ALTER TABLE public.barber_shops ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.barbers ENABLE ROW LEVEL SECURITY;
 
+-- barber_shops: public read, owner write
 CREATE POLICY "Anyone can view active shops" ON public.barber_shops
     FOR SELECT USING (is_active = TRUE);
 
 CREATE POLICY "Owners can manage their shops" ON public.barber_shops
     FOR ALL USING (auth.uid() = owner_id);
 
+-- barbers: public read, shop owner manages
 CREATE POLICY "Anyone can view barbers" ON public.barbers
     FOR SELECT USING (TRUE);
 

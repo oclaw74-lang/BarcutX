@@ -19,9 +19,14 @@ log = structlog.get_logger()
 router = APIRouter(prefix="/barber-shops", tags=["barber-shops"])
 
 
+# ---------------------------------------------------------------------------
+# Barber Shops
+# ---------------------------------------------------------------------------
+
+
 @router.get("", response_model=list[BarberShopResponse], status_code=status.HTTP_200_OK)
 async def list_barber_shops() -> list[BarberShopResponse]:
-    """List all active barber shops. Public endpoint - no auth required."""
+    """List all active barber shops. Public endpoint — no auth required."""
     supabase = await get_supabase()
     service = BarberShopService(supabase)
     rows = await service.list_active()
@@ -43,7 +48,7 @@ async def create_barber_shop(
 
 @router.get("/{shop_id}", response_model=BarberShopResponse, status_code=status.HTTP_200_OK)
 async def get_barber_shop(shop_id: str) -> BarberShopResponse:
-    """Get a single barber shop by ID. Public endpoint - no auth required."""
+    """Get a single barber shop by ID. Public endpoint — no auth required."""
     supabase = await get_supabase()
     service = BarberShopService(supabase)
     row = await service.get_or_404(shop_id)
@@ -77,13 +82,18 @@ async def deactivate_barber_shop(
     return BarberShopResponse(**row)
 
 
+# ---------------------------------------------------------------------------
+# Barbers (nested under barber shops)
+# ---------------------------------------------------------------------------
+
+
 @router.get(
     "/{shop_id}/barbers",
     response_model=list[BarberResponse],
     status_code=status.HTTP_200_OK,
 )
 async def list_barbers(shop_id: str) -> list[BarberResponse]:
-    """List all barbers in a shop. Public endpoint - no auth required."""
+    """List all barbers in a shop. Public endpoint — no auth required."""
     supabase = await get_supabase()
     service = BarberService(supabase)
     rows = await service.list_by_shop(shop_id)
