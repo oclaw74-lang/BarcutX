@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: supabase/postgres:15.8.1.020
+    image: postgis/postgis:16-3.4-alpine
     container_name: barcutx-postgres
     restart: unless-stopped
     ports:
@@ -19,7 +19,7 @@ services:
       retries: 10
 
   redis:
-    image: redis:7.4-alpine
+    image: redis:7-alpine
     container_name: barcutx-redis
     restart: unless-stopped
     ports:
@@ -42,7 +42,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ../../apps/backend-api/.env
+      - ../../apps/backend-api/.env.example
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-barcutx}:${POSTGRES_PASSWORD:-barcutx_dev}@postgres:5432/${POSTGRES_DB:-barcutx_dev}
       REDIS_URL: redis://redis:6379
@@ -55,6 +55,34 @@ services:
       - ../../apps/backend-api:/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
+  web:
+    build:
+      context: ../../apps/web-portal
+      dockerfile: Dockerfile
+    container_name: barcutx-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - api
+    volumes:
+      - ../../apps/web-portal:/app
+      - web_node_modules:/app/node_modules
+    command: pnpm dev
+
+  adminer:
+    image: adminer:latest
+    container_name: barcutx-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   postgres_data:
   redis_data:
+  web_node_modules:
