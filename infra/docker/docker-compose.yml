@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: supabase/postgres:15.8.1.020
+    container_name: barcutx-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-barcutx}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-barcutx_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-barcutx_dev}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-barcutx}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: barcutx-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ../../apps/backend-api
+      dockerfile: Dockerfile
+    container_name: barcutx-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../../apps/backend-api/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-barcutx}:${POSTGRES_PASSWORD:-barcutx_dev}@postgres:5432/${POSTGRES_DB:-barcutx_dev}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../../apps/backend-api:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
+  redis_data:

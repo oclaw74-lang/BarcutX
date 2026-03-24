@@ -1,0 +1,4 @@
+packages:
+  - "apps/mobile-app"
+  - "apps/web-portal"
+  - "packages/*"

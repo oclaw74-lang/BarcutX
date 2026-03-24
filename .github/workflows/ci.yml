@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # ─── JS/TS: lint + typecheck (Turborepo) ───────────────────────────────────
+  js:
+    name: JS/TS — lint & typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+  # ─── Python: lint + typecheck + tests ──────────────────────────────────────
+  python:
+    name: Python — lint, typecheck & tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/backend-api
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: barcutx
+          POSTGRES_PASSWORD: barcutx_test
+          POSTGRES_DB: barcutx_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pip install uv --no-cache-dir
+
+      - name: Install dependencies
+        run: uv pip install --system -e ".[dev]"
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Format check (ruff)
+        run: ruff format --check .
+
+      - name: Typecheck (mypy)
+        run: mypy app
+
+      - name: Run tests
+        env:
+          ENVIRONMENT: test
+          DATABASE_URL: postgresql+asyncpg://barcutx:barcutx_test@localhost:5432/barcutx_test
+          REDIS_URL: redis://localhost:6379
+          SUPABASE_URL: https://placeholder.supabase.co
+          SUPABASE_ANON_KEY: placeholder
+          SUPABASE_SERVICE_ROLE_KEY: placeholder
+          SUPABASE_JWT_SECRET: test-secret-32-chars-minimum-here
+          STRIPE_SECRET_KEY: sk_test_placeholder
+          STRIPE_WEBHOOK_SECRET: whsec_placeholder
+        run: pytest --cov=app --cov-report=term-missing -q

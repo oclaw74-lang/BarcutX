@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "BarcutX",
+    "slug": "barcutx",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F1115"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.barcutx.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F1115"
+      },
+      "package": "com.barcutx.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-location",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#E56A2E"
+        }
+      ]
+    ],
+    "scheme": "barcutx",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

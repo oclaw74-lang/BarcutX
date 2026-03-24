@@ -1,0 +1,37 @@
+{
+  "name": "@barcutx/mobile-app",
+  "version": "0.0.1",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "lint": "eslint app src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "expo": "~52.0.28",
+    "expo-router": "~4.0.17",
+    "expo-status-bar": "~2.0.1",
+    "expo-location": "~18.0.5",
+    "expo-notifications": "~0.29.10",
+    "react": "18.3.1",
+    "react-native": "0.76.6",
+    "react-native-maps": "1.20.1",
+    "@supabase/supabase-js": "^2.47.10",
+    "@stripe/stripe-react-native": "^0.40.0",
+    "zustand": "^5.0.3",
+    "@barcutx/shared-types": "workspace:*",
+    "@barcutx/shared-constants": "workspace:*",
+    "@barcutx/shared-utils": "workspace:*",
+    "@barcutx/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "typescript": "^5.7.3",
+    "eslint": "^9",
+    "eslint-config-expo": "^8.0.0"
+  }
+}
