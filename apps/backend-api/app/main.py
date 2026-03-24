@@ -66,12 +66,22 @@ from app.api.v1.auth import router as auth_router  # noqa: E402
 
 app.include_router(auth_router, prefix="/api/v1")
 
-# Queue -- issue #12
-from app.api.v1.queue import router as queue_router  # noqa: E402
-
-app.include_router(queue_router, prefix="/api/v1")
-
 # Barber Shops & Barbers -- issue #9
 from app.api.v1.barber_shops import router as barber_shops_router  # noqa: E402
 
 app.include_router(barber_shops_router, prefix="/api/v1")
+
+# Services -- issue #10
+from app.api.v1.services import router as services_router  # noqa: E402
+
+app.include_router(services_router, prefix="/api/v1")
+
+# Appointments -- issue #11
+from app.api.v1.appointments import router as appointments_router  # noqa: E402
+
+app.include_router(appointments_router, prefix="/api/v1")
+
+# Virtual Queue -- issue #12
+from app.api.v1.queue import router as queue_router  # noqa: E402
+
+app.include_router(queue_router, prefix="/api/v1")
