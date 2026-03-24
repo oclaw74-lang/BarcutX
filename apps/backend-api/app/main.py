@@ -40,7 +40,28 @@ app.add_middleware(
 
 @app.get("/health", tags=["system"])
 async def health_check() -> dict[str, str]:
-    return {"status": "ok", "version": "0.1.0"}
+    from sqlalchemy import text
+    from app.core.database import AsyncSessionLocal
+    from app.core.redis import get_redis
+
+    db_status = "disconnected"
+    redis_status = "disconnected"
+
+    try:
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+        db_status = "connected"
+    except Exception as e:
+        log.warning("health_check_db_failed", error=str(e))
+
+    try:
+        redis = get_redis()
+        await redis.ping()
+        redis_status = "connected"
+    except Exception as e:
+        log.warning("health_check_redis_failed", error=str(e))
+
+    return {"status": "ok", "db": db_status, "redis": redis_status, "version": "0.1.0"}
 
 
 # Routers (registered in Fase 1)
