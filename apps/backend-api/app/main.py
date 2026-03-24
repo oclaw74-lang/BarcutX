@@ -67,3 +67,8 @@ async def health_check() -> dict[str, str]:
 # Routers (registered in Fase 1)
 # from app.api.v1 import router as api_v1_router
 # app.include_router(api_v1_router, prefix="/api/v1")
+
+# Appointments — issue #11
+from app.api.v1.appointments import router as appointments_router  # noqa: E402
+
+app.include_router(appointments_router, prefix="/api/v1")
