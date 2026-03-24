@@ -62,3 +62,8 @@ async def health_check() -> dict[str, str]:
 
 from app.api.v1.queue import router as queue_router  # noqa: E402
 app.include_router(queue_router, prefix="/api/v1")
+
+# Barber Shops & Barbers -- issue #9
+from app.api.v1.barber_shops import router as barber_shops_router  # noqa: E402
+
+app.include_router(barber_shops_router, prefix="/api/v1")
