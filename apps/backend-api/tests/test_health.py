@@ -4,7 +4,7 @@ import pytest
 from httpx import AsyncClient
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_health_returns_ok(client: AsyncClient) -> None:
     with (
         patch("app.core.database.AsyncSessionLocal") as mock_session_factory,
@@ -29,7 +29,7 @@ async def test_health_returns_ok(client: AsyncClient) -> None:
     assert "redis" in data
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_health_db_disconnected_still_returns_ok(client: AsyncClient) -> None:
     with (
         patch("app.core.database.AsyncSessionLocal") as mock_session_factory,
