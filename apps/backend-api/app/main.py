@@ -28,25 +28,20 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 
 app = FastAPI(
-    title="BarcutX API",
-    version="0.1.0",
-    lifespan=lifespan,
-    docs_url="/docs" if settings.environment != "production" else None,
-    redoc_url=None,
+    title="BarcutX API", version="0.1.0", lifespan=lifespan,
+    docs_url="/docs" if settings.environment != "production" else None, redoc_url=None,
 )
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.allowed_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    CORSMiddleware, allow_origins=settings.allowed_origins,
+    allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
 )
 
 
 @app.get("/health", tags=["system"])
 async def health_check() -> dict[str, str]:
     from sqlalchemy import text
+
     from app.core.database import AsyncSessionLocal
     from app.core.redis import get_redis
     db_status = "disconnected"
@@ -66,5 +61,27 @@ async def health_check() -> dict[str, str]:
     return {"status": "ok", "db": db_status, "redis": redis_status, "version": "0.1.0"}
 
 
+# Auth -- issue #8
+from app.api.v1.auth import router as auth_router  # noqa: E402
+
+app.include_router(auth_router, prefix="/api/v1")
+
+# Barber Shops & Barbers -- issue #9
+from app.api.v1.barber_shops import router as barber_shops_router  # noqa: E402
+
+app.include_router(barber_shops_router, prefix="/api/v1")
+
+# Services -- issue #10
+from app.api.v1.services import router as services_router  # noqa: E402
+
+app.include_router(services_router, prefix="/api/v1")
+
+# Appointments -- issue #11
+from app.api.v1.appointments import router as appointments_router  # noqa: E402
+
+app.include_router(appointments_router, prefix="/api/v1")
+
+# Virtual Queue -- issue #12
 from app.api.v1.queue import router as queue_router  # noqa: E402
+
 app.include_router(queue_router, prefix="/api/v1")
