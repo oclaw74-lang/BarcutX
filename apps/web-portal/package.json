@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "next": "^15.1.6",
@@ -18,6 +20,8 @@
     "@stripe/stripe-js": "^5.5.0",
     "zustand": "^5.0.3",
     "recharts": "^2.15.0",
+    "axios": "^1.7.9",
+    "@tanstack/react-query": "^5.62.0",
     "@barcutx/shared-types": "workspace:*",
     "@barcutx/shared-constants": "workspace:*",
     "@barcutx/shared-utils": "workspace:*",
@@ -32,6 +36,12 @@
     "postcss": "^8.5.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^9",
-    "eslint-config-next": "^15.1.6"
+    "eslint-config-next": "^15.1.6",
+    "vitest": "^2.1.8",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/user-event": "^14.5.2",
+    "jsdom": "^25.0.1"
   }
 }
