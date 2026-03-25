@@ -2,7 +2,7 @@ import uuid
 from decimal import Decimal
 
 import structlog
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.products.models import Product

@@ -21,6 +21,15 @@ VALID_SHOP_PRODUCT_PAYLOAD = {
     "category": "styling",
 }
 
+VALID_BARBER_PRODUCT_PAYLOAD = {
+    "name": "Aceite para barba",
+    "description": "Hidratante natural",
+    "price": "18.00",
+    "stock_quantity": 10,
+    "category": "beard",
+}
+
+
 
 def _make_product_response(
     product_id: str = PRODUCT_ID,
