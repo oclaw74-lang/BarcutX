@@ -61,25 +61,8 @@ jobs:
   test-backend:
     name: Test — Backend (Python 3.12)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/backend-api
 
     services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: barcutx
-          POSTGRES_PASSWORD: barcutx_test
-          POSTGRES_DB: barcutx_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-        ports:
-          - 5432:5432
-
       redis:
         image: redis:7-alpine
         options: >-
@@ -106,22 +89,21 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
+        working-directory: apps/backend-api
         run: pip install uv --no-cache-dir && uv pip install --system -e ".[dev]"
 
       - name: Run tests
+        working-directory: apps/backend-api
         env:
           ENVIRONMENT: test
-          DATABASE_URL: postgresql+asyncpg://barcutx:barcutx_test@localhost:5432/barcutx_test
           REDIS_URL: redis://localhost:6379
           SUPABASE_URL: https://placeholder.supabase.co
-          SUPABASE_ANON_KEY: placeholder
-          SUPABASE_SERVICE_ROLE_KEY: placeholder
-          SUPABASE_JWT_SECRET: test-secret-32-chars-minimum-here
-          SECRET_KEY: test-secret-key-not-for-production
+          SUPABASE_ANON_KEY: placeholder-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+          SUPABASE_JWT_SECRET: test-secret-32-chars-minimum-here-ok
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_WEBHOOK_SECRET: whsec_placeholder
-        run: pytest apps/backend-api/tests/ -v --tb=short --cov=app --cov-report=term-missing
-        working-directory: ${{ github.workspace }}
+        run: pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 
   # ─── Job 3: Frontend tests ────────────────────────────────────────────────
   test-frontend:

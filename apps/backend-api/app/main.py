@@ -101,3 +101,13 @@ app.include_router(invitations_router, prefix="/api/v1")
 from app.api.v1.barbers import router as barbers_router  # noqa: E402
 
 app.include_router(barbers_router, prefix="/api/v1")
+
+# Geo search -- issue #49
+from app.api.v1.geo import router as geo_router  # noqa: E402
+
+app.include_router(geo_router, prefix="/api/v1")
+
+# QR Anonymous Queue -- issue #49
+from app.api.v1.queue_public import router as queue_public_router  # noqa: E402
+
+app.include_router(queue_public_router, prefix="/api/v1")

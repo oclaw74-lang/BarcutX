@@ -18,11 +18,11 @@ ALTER TABLE barber_portfolio ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "portfolio_select" ON barber_portfolio FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "portfolio_insert" ON barber_portfolio FOR INSERT WITH CHECK (
-  barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );
 CREATE POLICY "portfolio_update" ON barber_portfolio FOR UPDATE USING (
-  barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );
 CREATE POLICY "portfolio_delete" ON barber_portfolio FOR DELETE USING (
-  barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );
