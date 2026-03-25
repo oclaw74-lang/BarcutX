@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Read(*)",
+      "mcp__plugin_team-software-engineering_filesystem__read_file(*)",
+      "mcp__plugin_team-software-engineering_filesystem__read_multiple_files(*)",
+      "mcp__plugin_team-software-engineering_filesystem__read_text_file(*)",
+      "mcp__plugin_team-software-engineering_filesystem__read_media_file(*)",
+      "mcp__plugin_team-software-engineering_filesystem__write_file(*)",
+      "mcp__plugin_team-software-engineering_filesystem__edit_file(*)",
+      "mcp__plugin_team-software-engineering_filesystem__list_directory(*)",
+      "mcp__plugin_team-software-engineering_filesystem__list_directory_with_sizes(*)",
+      "mcp__plugin_team-software-engineering_filesystem__directory_tree(*)",
+      "mcp__plugin_team-software-engineering_filesystem__search_files(*)",
+      "mcp__plugin_team-software-engineering_filesystem__get_file_info(*)",
+      "mcp__plugin_team-software-engineering_filesystem__create_directory(*)",
+      "mcp__plugin_team-software-engineering_filesystem__move_file(*)",
+      "mcp__plugin_team-software-engineering_github__*",
+      "mcp__plugin_team-software-engineering_playwright__*"
+    ]
+  }
+}
