@@ -5,7 +5,6 @@ import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.core.database import engine
 from app.core.logging import configure_logging
 from app.core.websocket_manager import ws_manager
 
@@ -23,7 +22,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         await redis_task
     except asyncio.CancelledError:
         pass
-    await engine.dispose()
     log.info("barcutx_api_stopped")
 
 
@@ -40,15 +38,13 @@ app.add_middleware(
 
 @app.get("/health", tags=["system"])
 async def health_check() -> dict[str, str]:
-    from sqlalchemy import text
-
-    from app.core.database import AsyncSessionLocal
+    from app.core.database import get_supabase
     from app.core.redis import get_redis
     db_status = "disconnected"
     redis_status = "disconnected"
     try:
-        async with AsyncSessionLocal() as session:
-            await session.execute(text("SELECT 1"))
+        client = await get_supabase()
+        await client.table("profiles").select("id").limit(1).execute()
         db_status = "connected"
     except Exception as e:
         log.warning("health_check_db_failed", error=str(e))
