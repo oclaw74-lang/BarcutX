@@ -7,7 +7,9 @@ ALTER TABLE barber_shops
   ADD COLUMN IF NOT EXISTS tagline TEXT,
   ADD COLUMN IF NOT EXISTS instagram_url TEXT,
   ADD COLUMN IF NOT EXISTS whatsapp TEXT,
-  ADD COLUMN IF NOT EXISTS gallery_urls TEXT[] DEFAULT '{}';
+  ADD COLUMN IF NOT EXISTS gallery_urls TEXT[] DEFAULT '{}',
+  ADD COLUMN IF NOT EXISTS logo_url TEXT,
+  ADD COLUMN IF NOT EXISTS cover_url TEXT;
 
 -- Generate initial slug for existing shops
 UPDATE barber_shops
