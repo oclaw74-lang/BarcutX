@@ -15,6 +15,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Inicio', href: '/dashboard' },
   { label: 'Mi Barberia', href: '/dashboard/shop' },
   { label: 'Servicios', href: '/dashboard/services' },
+  { label: 'Catalogo', href: '/dashboard/catalogo' },
   { label: 'Reservas', href: '/dashboard/appointments' },
   { label: 'Cola Virtual', href: '/dashboard/queue' },
   { label: 'Configuracion', href: '/dashboard/settings' },
