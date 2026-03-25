@@ -36,7 +36,7 @@ CREATE POLICY "invitations_owner_all" ON shop_invitations FOR ALL USING (
   shop_id IN (SELECT id FROM barber_shops WHERE owner_id = auth.uid())
 );
 CREATE POLICY "invitations_invitee_select" ON shop_invitations FOR SELECT USING (
-  invited_email = (SELECT email FROM profiles WHERE id = auth.uid())
+  invited_email = (SELECT email FROM auth.users WHERE id = auth.uid())
 );
 
 CREATE POLICY "join_requests_insert" ON barber_join_requests FOR INSERT WITH CHECK (

@@ -26,13 +26,13 @@ ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "products_select" ON products FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "products_insert_owner" ON products FOR INSERT WITH CHECK (
   shop_id IN (SELECT id FROM barber_shops WHERE owner_id = auth.uid())
-  OR barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  OR barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );
 CREATE POLICY "products_update_owner" ON products FOR UPDATE USING (
   shop_id IN (SELECT id FROM barber_shops WHERE owner_id = auth.uid())
-  OR barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  OR barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );
 CREATE POLICY "products_delete_owner" ON products FOR DELETE USING (
   shop_id IN (SELECT id FROM barber_shops WHERE owner_id = auth.uid())
-  OR barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  OR barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );

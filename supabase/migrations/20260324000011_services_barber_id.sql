@@ -12,11 +12,11 @@ CREATE INDEX IF NOT EXISTS idx_services_barber_id ON services(barber_id);
 DROP POLICY IF EXISTS "services_insert" ON services;
 CREATE POLICY "services_insert" ON services FOR INSERT WITH CHECK (
   shop_id IN (SELECT id FROM barber_shops WHERE owner_id = auth.uid())
-  OR barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  OR barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );
 
 DROP POLICY IF EXISTS "services_update" ON services;
 CREATE POLICY "services_update" ON services FOR UPDATE USING (
   shop_id IN (SELECT id FROM barber_shops WHERE owner_id = auth.uid())
-  OR barber_id IN (SELECT id FROM barbers WHERE user_id = auth.uid())
+  OR barber_id IN (SELECT id FROM barbers WHERE profile_id = auth.uid())
 );
