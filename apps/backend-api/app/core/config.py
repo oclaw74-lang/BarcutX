@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,8 +15,8 @@ class Settings(BaseSettings):
     debug: bool = False
     allowed_origins: list[str] = ["http://localhost:3000"]
 
-    # Database
-    database_url: str  # asyncpg: postgresql+asyncpg://user:pass@host/db
+    # Database (optional — Supabase cloud is the primary DB)
+    database_url: Optional[str] = None  # asyncpg: postgresql+asyncpg://user:pass@host/db
 
     # Supabase
     supabase_url: str
