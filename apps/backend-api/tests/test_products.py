@@ -30,6 +30,7 @@ VALID_BARBER_PRODUCT_PAYLOAD = {
 }
 
 
+
 def _make_product_response(
     product_id: str = PRODUCT_ID,
     shop_id: str = SHOP_ID,
