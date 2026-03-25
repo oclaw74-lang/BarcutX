@@ -40,15 +40,13 @@ app.add_middleware(
 
 @app.get("/health", tags=["system"])
 async def health_check() -> dict[str, str]:
-    from sqlalchemy import text
-
-    from app.core.database import AsyncSessionLocal
     from app.core.redis import get_redis
+    from app.core.supabase import get_supabase_client
     db_status = "disconnected"
     redis_status = "disconnected"
     try:
-        async with AsyncSessionLocal() as session:
-            await session.execute(text("SELECT 1"))
+        client = get_supabase_client()
+        await client.table("profiles").select("id").limit(1).execute()
         db_status = "connected"
     except Exception as e:
         log.warning("health_check_db_failed", error=str(e))
@@ -105,3 +103,13 @@ app.include_router(invitations_router, prefix="/api/v1")
 from app.api.v1.barbers import router as barbers_router  # noqa: E402
 
 app.include_router(barbers_router, prefix="/api/v1")
+
+# Geo search -- issue #49
+from app.api.v1.geo import router as geo_router  # noqa: E402
+
+app.include_router(geo_router, prefix="/api/v1")
+
+# QR Anonymous Queue -- issue #49
+from app.api.v1.queue_public import router as queue_public_router  # noqa: E402
+
+app.include_router(queue_public_router, prefix="/api/v1")

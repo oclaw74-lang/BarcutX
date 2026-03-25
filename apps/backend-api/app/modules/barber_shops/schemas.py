@@ -1,9 +1,9 @@
 import re
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 _SLUG_RE = re.compile(r"^[a-z0-9-]{3,50}$")
 _HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
@@ -178,3 +178,35 @@ class ShopPublicResponse(BaseModel):
     gallery_urls: list[str]
     is_active: bool
     created_at: datetime
+
+
+# ---------------------------------------------------------------------------
+# Geo / location schemas
+# ---------------------------------------------------------------------------
+
+
+class ShopNearbyQuery(BaseModel):
+    lat: float = Field(..., ge=-90, le=90)
+    lng: float = Field(..., ge=-180, le=180)
+    radius_km: float = Field(default=10.0, ge=0.1, le=50.0)
+
+
+class ShopNearbyResult(BaseModel):
+    id: UUID
+    name: str
+    slug: Optional[str] = None
+    address: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    distance_km: float
+    rating: Optional[float] = None
+    is_open: bool
+    accent_color: Optional[str] = None
+    logo_url: Optional[str] = None
+    barber_count: int
+
+
+class ShopLocationUpdate(BaseModel):
+    latitude: float = Field(..., ge=-90, le=90)
+    longitude: float = Field(..., ge=-180, le=180)
+    address: Optional[str] = None
