@@ -44,7 +44,7 @@ const mockPortfolioItem: PortfolioItem = {
   id: 'pi-1',
   barberId: 'demo',
   imageUrl: 'https://example.com/photo.jpg',
-  caption: 'Fade clásico',
+  caption: 'Fade clasico',
   order: 0,
   createdAt: '2026-01-01T00:00:00Z',
 }
@@ -195,8 +195,8 @@ describe('Catalog page', () => {
       </Wrapper>,
     )
 
-    const toggle = screen.getByRole('switch', { name: /reordenar/i }) ?? screen.getAllByRole('switch')[0]
-    fireEvent.click(toggle)
+    const toggles = screen.getAllByRole('switch')
+    fireEvent.click(toggles[0])
 
     await waitFor(() => {
       expect(mutateAsync).toHaveBeenCalledWith({ isActive: false })
@@ -247,8 +247,8 @@ describe('Catalog page', () => {
       expect(screen.getByTestId('portfolio-upload-button')).toBeInTheDocument()
     })
 
-    // Portfolio item is rendered
-    expect(screen.getByAltText('Fade clásico')).toBeInTheDocument()
+    // Portfolio item image is rendered
+    expect(screen.getByAltText('Fade clasico')).toBeInTheDocument()
   })
 })
 
