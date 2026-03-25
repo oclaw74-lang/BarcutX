@@ -74,7 +74,11 @@ export interface ServiceRowProps {
  * - Service name and duration
  * - Inline editable price
  * - Active/inactive toggle
- * - Edit button
+ *
+ * Props:
+ * - barberId: owning barber ID
+ * - barberService: full BarberService object
+ * - dragHandleProps: optional spread for DnD drag handle
  */
 export function ServiceRow({ barberId, barberService, dragHandleProps }: ServiceRowProps) {
   const { service, customPrice, isActive, isInherited, id } = barberService
@@ -98,7 +102,6 @@ export function ServiceRow({ barberId, barberService, dragHandleProps }: Service
   function handlePriceClick() {
     setPriceInput(String(effectivePrice))
     setIsEditingPrice(true)
-    // Focus on next tick after render
     setTimeout(() => priceInputRef.current?.select(), 0)
   }
 

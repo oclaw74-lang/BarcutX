@@ -64,7 +64,7 @@ function TabBar({ activeTab, onChange }: TabBarProps) {
   )
 }
 
-// ---- Skeleton ---------------------------------------------------------------
+// ---- Skeleton loaders -------------------------------------------------------
 
 function SkeletonRows({ count = 3 }: { count?: number }) {
   return (

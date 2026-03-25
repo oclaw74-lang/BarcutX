@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useDeletePortfolioItem, useReorderPortfolio } from '@/hooks/useCatalog'
+import { useDeletePortfolioItem } from '@/hooks/useCatalog'
 import type { PortfolioItem } from '@/types/catalog'
 
 export interface PortfolioGridProps {
@@ -74,11 +74,11 @@ function PortfolioItemTile({ barberId, item }: PortfolioItemTileProps) {
  * PortfolioGrid — 3-column grid of portfolio photos.
  *
  * The last cell is always the "+ Subir foto" button.
- * Supports ordering display based on the `order` field.
+ * Items are sorted by the `order` field.
  *
  * Props:
  * - barberId: owner barber ID (for delete mutations)
- * - items: sorted portfolio items
+ * - items: portfolio items (unsorted OK, sorted internally)
  * - onUpload: callback to open the upload modal
  */
 export function PortfolioGrid({ barberId, items, onUpload }: PortfolioGridProps) {

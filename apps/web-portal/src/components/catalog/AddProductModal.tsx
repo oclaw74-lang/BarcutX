@@ -81,7 +81,6 @@ export function AddProductModal({
   const isSubmitting = createMutation.isPending || updateMutation.isPending
   const hasApiError = createMutation.isError || updateMutation.isError
 
-  // Re-populate form if editingProduct changes
   useEffect(() => {
     if (editingProduct) {
       setForm(formFromProduct(editingProduct))
