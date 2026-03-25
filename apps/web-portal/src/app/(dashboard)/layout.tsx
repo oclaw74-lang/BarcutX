@@ -18,6 +18,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Catalogo', href: '/dashboard/catalogo' },
   { label: 'Reservas', href: '/dashboard/appointments' },
   { label: 'Cola Virtual', href: '/dashboard/queue' },
+  { label: 'Equipo', href: '/dashboard/equipo' },
   { label: 'Configuracion', href: '/dashboard/settings' },
 ]
 
