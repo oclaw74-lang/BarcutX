@@ -85,3 +85,23 @@ app.include_router(appointments_router, prefix="/api/v1")
 from app.api.v1.queue import router as queue_router  # noqa: E402
 
 app.include_router(queue_router, prefix="/api/v1")
+
+# Products -- issue #33
+from app.api.v1.products import router as products_router  # noqa: E402
+
+app.include_router(products_router, prefix="/api/v1")
+
+# Portfolio -- issue #34
+from app.api.v1.portfolio import router as portfolio_router  # noqa: E402
+
+app.include_router(portfolio_router, prefix="/api/v1")
+
+# Invitations & Join Requests -- issue #35
+from app.api.v1.invitations import router as invitations_router  # noqa: E402
+
+app.include_router(invitations_router, prefix="/api/v1")
+
+# Barber Extended Profile -- issue #37
+from app.api.v1.barbers import router as barbers_router  # noqa: E402
+
+app.include_router(barbers_router, prefix="/api/v1")
